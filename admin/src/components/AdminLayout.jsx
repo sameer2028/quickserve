@@ -1,0 +1,50 @@
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import { useSelector } from 'react-redux';
+import { Bell } from 'lucide-react';
+
+const AdminLayout = () => {
+  const { user } = useSelector((state) => state.auth);
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 ml-0 md:ml-64 flex flex-col overflow-hidden">
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
+          <div className="flex items-center sm:hidden">
+            <h1 className="text-xl font-bold text-gray-900">
+              Quick<span className="text-primary-600">Serve</span>
+            </h1>
+          </div>
+          <div className="hidden sm:block">
+            {/* Can put a search bar or breadcrumbs here */}
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <button className="p-2 text-gray-400 hover:text-gray-500 relative">
+              <Bell className="h-6 w-6" />
+              <span className="absolute top-1 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+            </button>
+            
+            <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
+              <div className="flex flex-col text-right">
+                <span className="text-sm font-medium text-gray-900">{user?.name || 'Admin User'}</span>
+                <span className="text-xs text-gray-500 capitalize">{user?.role?.replace('_', ' ')}</span>
+              </div>
+              <div className="h-9 w-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+                {user?.name?.charAt(0) || 'A'}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default AdminLayout;
