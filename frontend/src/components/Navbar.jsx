@@ -77,7 +77,17 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="flex items-center sm:hidden">
+          <div className="flex items-center gap-4 sm:hidden">
+            {isAuthenticated && (
+              <Link to="/cart" className="text-gray-600 hover:text-primary-600 relative">
+                <ShoppingBag size={24} />
+                {cartItemsCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </Link>
+            )}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -98,7 +108,6 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link to="/profile" className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Profile</Link>
-                <Link to="/cart" className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Cart</Link>
                 <button
                   onClick={handleLogout}
                   className="w-full text-left block px-4 py-2 text-base font-medium text-red-600 hover:bg-red-50"
