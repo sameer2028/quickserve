@@ -47,7 +47,12 @@ app.use(hpp());
 
 // ─── General Middleware ───────────────────────────────────
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001',
+    process.env.CLIENT_URL,
+    process.env.ADMIN_URL
+  ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
