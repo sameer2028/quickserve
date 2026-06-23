@@ -5,7 +5,7 @@ export const fetchOrders = createAsyncThunk(
   'orders/fetchAll',
   async ({ status, page = 1, limit = 10 }, { rejectWithValue }) => {
     try {
-      const response = await api.get('/admin/orders', { params: { status, page, limit } });
+      const response = await api.get('/orders/restaurant/orders', { params: { status, page, limit } });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch orders');
@@ -17,7 +17,7 @@ export const updateOrderStatus = createAsyncThunk(
   'orders/updateStatus',
   async ({ orderId, status }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/admin/orders/${orderId}/status`, { status });
+      const response = await api.put(`/orders/${orderId}/status`, { status });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update order status');

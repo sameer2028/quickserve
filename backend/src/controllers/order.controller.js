@@ -100,16 +100,24 @@ exports.createOrder = async (req, res, next) => {
     const order = await Order.create({
       user: req.user._id,
       restaurant: restaurant._id,
-      items: cart.items.map((item) => ({
-        menuItem: item.menuItem,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        variant: item.variant,
-        addons: item.addons,
-        specialInstructions: item.specialInstructions,
-        itemTotal: item.itemTotal,
-      })),
+      items: cart.items.map((item) => {
+        const orderItem = {
+          menuItem: item.menuItem,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          specialInstructions: item.specialInstructions,
+          itemTotal: item.itemTotal,
+        };
+        if (item.variant && item.variant.name) {
+          orderItem.variant = {
+            name: item.variant.name,
+            price: item.variant.price
+          };
+        }
+        if (item.addons && item.addons.length > 0) orderItem.addons = item.addons;
+        return orderItem;
+      }),
       orderType,
       schedule: scheduleData,
       deliveryAddress: orderType === 'delivery' ? deliveryAddress : undefined,

@@ -60,8 +60,14 @@ const orderSchema = new mongoose.Schema(
       },
     },
     deliveryAddress: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Address',
+      name: String,
+      phone: String,
+      street: String,
+      landmark: String,
+      city: String,
+      state: String,
+      pincode: String,
+      country: String,
     },
     status: {
       type: String,

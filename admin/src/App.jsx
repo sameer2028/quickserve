@@ -7,12 +7,16 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
+import MenuManagement from './pages/MenuManagement';
+import Analytics from './pages/Analytics';
+import Staff from './pages/Staff';
+import Settings from './pages/Settings';
 
 // Layout
 import AdminLayout from './components/AdminLayout';
 import { getMe } from './store/authSlice';
 
-// Temporary ProtectedRoute wrapper
+// ProtectedRoute wrapper
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   if (!isAuthenticated) return <Navigate to="/login" replace />;
@@ -53,6 +57,10 @@ const App = () => {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="menu" element={<MenuManagement />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="staff" element={<Staff />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

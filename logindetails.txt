@@ -1,0 +1,15 @@
+**restraunt owner**
+
+spicy bite 
+id: owner@example.com
+pass: 12345678
+
+slice haven pizzeria
+id: mario@slicehaven.com
+pass: password123
+
+
+**customer**
+test customer
+id: customer@example.com
+pass: 12345678
