@@ -45,11 +45,11 @@ const AdminLayout = () => {
             </button>
             
             <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
-              <div className="flex flex-col text-right">
+              <div className="hidden sm:flex flex-col text-right">
                 <span className="text-sm font-medium text-gray-900">{displayName}</span>
                 <span className="text-xs text-gray-500 capitalize">{user?.role?.replace('_', ' ')}</span>
               </div>
-              <div className="h-9 w-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+              <div className="h-9 w-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold shrink-0">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             </div>
