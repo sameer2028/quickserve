@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Bell, Menu } from 'lucide-react';
+import { fetchMyRestaurant } from '../store/dashboardSlice';
 
 const AdminLayout = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { restaurant } = useSelector((state) => state.dashboard);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Fetch restaurant details so it's globally available in the layout
+    dispatch(fetchMyRestaurant());
+  }, [dispatch]);
+
+  const displayName = restaurant?.name || user?.name || 'Restaurant Owner';
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -36,11 +46,11 @@ const AdminLayout = () => {
             
             <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
               <div className="flex flex-col text-right">
-                <span className="text-sm font-medium text-gray-900">{user?.name || 'Admin User'}</span>
+                <span className="text-sm font-medium text-gray-900">{displayName}</span>
                 <span className="text-xs text-gray-500 capitalize">{user?.role?.replace('_', ' ')}</span>
               </div>
               <div className="h-9 w-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                {user?.name?.charAt(0) || 'A'}
+                {displayName.charAt(0).toUpperCase()}
               </div>
             </div>
           </div>

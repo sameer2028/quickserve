@@ -39,8 +39,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       )}
       
       {/* Sidebar Content */}
-      <div className={`w-64 bg-white border-r border-gray-200 h-screen flex flex-col fixed left-0 top-0 z-30 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
+      <div className={`w-64 bg-white border-r border-gray-200 flex flex-col fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="h-16 flex items-center px-6 border-b border-gray-200 shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">
             Quick<span className="text-primary-600">Serve</span>
           </h1>
