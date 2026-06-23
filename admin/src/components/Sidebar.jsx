@@ -12,7 +12,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -29,12 +29,22 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col hidden md:flex fixed left-0 top-0">
-      <div className="h-16 flex items-center px-6 border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Quick<span className="text-primary-600">Serve</span>
-        </h1>
-      </div>
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden transition-opacity"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar Content */}
+      <div className={`w-64 bg-white border-r border-gray-200 h-screen flex flex-col fixed left-0 top-0 z-30 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="h-16 flex items-center px-6 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Quick<span className="text-primary-600">Serve</span>
+          </h1>
+        </div>
       
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="space-y-1 px-3">
@@ -44,6 +54,7 @@ const Sidebar = () => {
               <NavLink
                 key={item.name}
                 to={item.path}
+                onClick={() => setIsOpen && setIsOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 ${
                     isActive
@@ -70,6 +81,7 @@ const Sidebar = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

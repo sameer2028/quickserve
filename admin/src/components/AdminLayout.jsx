@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useSelector } from 'react-redux';
-import { Bell } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 
 const AdminLayout = () => {
   const { user } = useSelector((state) => state.auth);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div className="flex-1 ml-0 md:ml-64 flex flex-col overflow-hidden">
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
-          <div className="flex items-center sm:hidden">
+          <div className="flex items-center md:hidden gap-3">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-1 -ml-1 text-gray-600 hover:text-gray-900 focus:outline-none"
+            >
+              <Menu size={24} />
+            </button>
             <h1 className="text-xl font-bold text-gray-900">
               Quick<span className="text-primary-600">Serve</span>
             </h1>
