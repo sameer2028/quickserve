@@ -47,12 +47,10 @@ const Navbar = () => {
 
                 <div className="relative group">
                   <button className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 focus:outline-none">
-                    {user?.avatar ? (
+                    {user?.avatar?.url ? (
                       <img src={user.avatar.url} alt="Profile" className="w-8 h-8 rounded-full object-cover border-2 border-primary-100" />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200">
-                        <User size={16} className="text-gray-500" />
-                      </div>
+                      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" className="w-8 h-8 rounded-full object-cover border-2 border-primary-100" />
                     )}
                     <span className="font-medium text-sm">{user?.name?.split(' ')[0]}</span>
                   </button>

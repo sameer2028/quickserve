@@ -54,8 +54,8 @@ const Profile = () => {
       return;
     }
 
-    const fetchData = async () => {
-      setIsLoading(true);
+    const fetchData = async (showLoading = true) => {
+      if (showLoading) setIsLoading(true);
       try {
         if (activeTab === 'orders') {
           const { data } = await api.get('/orders/my-orders');
@@ -70,11 +70,24 @@ const Profile = () => {
       } catch (error) {
         toast.error('Failed to load data');
       } finally {
-        setIsLoading(false);
+        if (showLoading) setIsLoading(false);
       }
     };
 
-    fetchData();
+    // Initial fetch
+    fetchData(true);
+
+    // Set up polling every 5 seconds for live order status tracking
+    let interval;
+    if (activeTab === 'orders') {
+      interval = setInterval(() => {
+        fetchData(false);
+      }, 5000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [activeTab, user, navigate]);
 
   const handleTabChange = (tab) => {

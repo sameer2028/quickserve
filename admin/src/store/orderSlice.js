@@ -49,6 +49,13 @@ const orderSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      .addCase(updateOrderStatus.pending, (state, action) => {
+        // Optimistic update for instant UI feedback
+        const index = state.orders.findIndex(o => o._id === action.meta.arg.orderId);
+        if (index !== -1) {
+          state.orders[index].status = action.meta.arg.status;
+        }
+      })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const index = state.orders.findIndex(o => o._id === action.payload.order._id);
         if (index !== -1) {
