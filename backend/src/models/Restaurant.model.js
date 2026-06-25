@@ -217,13 +217,17 @@ restaurantSchema.virtual('staff', {
 
 // ─── Methods ────────────────────────────────────────────
 restaurantSchema.methods.isOpenAt = function (date) {
-  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const dayName = dayNames[date.getDay()];
-  const hours = this.operatingHours.find((h) => h.day === dayName);
+  const options = { timeZone: 'Asia/Kolkata' };
+  const dayString = new Intl.DateTimeFormat('en-US', { ...options, weekday: 'long' }).format(date).toLowerCase();
+  
+  const hours = this.operatingHours.find((h) => h.day === dayString);
 
   if (!hours || hours.isClosed) return false;
 
-  const currentTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  const currentHour = new Intl.DateTimeFormat('en-US', { ...options, hour: '2-digit', hourCycle: 'h23' }).format(date);
+  const currentMinute = new Intl.DateTimeFormat('en-US', { ...options, minute: '2-digit' }).format(date);
+  
+  const currentTime = `${currentHour}:${currentMinute}`;
   return currentTime >= hours.open && currentTime <= hours.close;
 };
 
