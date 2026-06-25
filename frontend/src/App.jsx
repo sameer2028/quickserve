@@ -16,6 +16,7 @@ import RestaurantDetails from './pages/RestaurantDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Profile from './pages/Profile';
+import GoogleAuthCallback from './pages/GoogleAuthCallback';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/auth/google/success" element={<GoogleAuthCallback />} />
           <Route path="/restaurant/:slug" element={<RestaurantDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
