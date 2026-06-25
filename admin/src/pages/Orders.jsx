@@ -4,7 +4,7 @@ import { fetchOrders, updateOrderStatus } from '../store/orderSlice';
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const { orders, isLoading } = useSelector((state) => state.orders);
+  const { orders, isLoading, updatingOrders } = useSelector((state) => state.orders);
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
@@ -126,7 +126,12 @@ const Orders = () => {
                       <select
                         value={order.status}
                         onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        className="text-sm border-gray-300 rounded-md py-1 pl-2 pr-8 focus:ring-primary-500 focus:border-primary-500 outline-none border"
+                        disabled={updatingOrders && updatingOrders[order._id]}
+                        className={`text-sm rounded-md py-1 pl-2 pr-8 focus:outline-none border ${
+                          updatingOrders && updatingOrders[order._id] 
+                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                            : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                        }`}
                       >
                         <option value="pending" disabled={isOptionDisabled(order.status, 'pending')}>Pending</option>
                         <option value="confirmed" disabled={isOptionDisabled(order.status, 'confirmed')}>Confirmed</option>

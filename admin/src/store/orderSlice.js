@@ -31,6 +31,7 @@ const orderSlice = createSlice({
     orders: [],
     pagination: {},
     isLoading: false,
+    updatingOrders: {},
     error: null,
   },
   reducers: {},
@@ -50,17 +51,26 @@ const orderSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(updateOrderStatus.pending, (state, action) => {
+        if (!state.updatingOrders) state.updatingOrders = {};
+        state.updatingOrders[action.meta.arg.orderId] = true;
+        
         // Optimistic update for instant UI feedback
         const index = state.orders.findIndex(o => o._id === action.meta.arg.orderId);
         if (index !== -1) {
+          // Store old status in meta for potential rollback (requires manual handling if needed)
           state.orders[index].status = action.meta.arg.status;
         }
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        if (state.updatingOrders) delete state.updatingOrders[action.meta.arg.orderId];
         const index = state.orders.findIndex(o => o._id === action.payload.order._id);
         if (index !== -1) {
           state.orders[index] = action.payload.order;
         }
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        if (state.updatingOrders) delete state.updatingOrders[action.meta.arg.orderId];
+        state.error = action.payload;
       });
   },
 });
