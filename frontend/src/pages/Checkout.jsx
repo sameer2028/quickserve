@@ -53,7 +53,7 @@ const Checkout = () => {
           api.get('/users/addresses').catch(() => ({ data: { data: { addresses: [] } } }))
         ]);
         setWalletBalance(walletRes.data.data?.wallet?.balance ?? walletRes.data.data?.balance ?? 0);
-        
+
         const addresses = addressRes.data.data?.addresses || [];
         setSavedAddresses(addresses);
         if (addresses.length > 0) {
@@ -100,7 +100,7 @@ const Checkout = () => {
           setIsProcessing(false);
           return;
         }
-        
+
         const combinedDateTime = new Date(`${scheduledDate}T${scheduledTime}`);
         if (combinedDateTime < new Date(Date.now() + 30 * 60 * 1000)) {
           toast.error('Scheduled time must be at least 30 minutes from now');
@@ -154,22 +154,22 @@ const Checkout = () => {
 
       if (paymentMethod === 'wallet') {
         // Wallet payment is instant
-        setOrderComplete(data.data.order);
         dispatch(clearCart());
         toast.success('Order placed successfully! Paid via wallet.');
+        navigate('/profile?tab=orders');
       } else {
         // For card, we would integrate Stripe Elements here
         // For demo/testing, try to confirm directly
         try {
           await api.post('/payments/confirm', { paymentIntentId: paymentRes.data.data.paymentIntentId });
-          setOrderComplete(data.data.order);
           dispatch(clearCart());
           toast.success('Payment successful! Order placed.');
+          navigate('/profile?tab=orders');
         } catch {
           // If Stripe confirm fails (no real Stripe setup), still show success for the order
-          setOrderComplete(data.data.order);
           dispatch(clearCart());
           toast.success('Order placed! Payment pending.');
+          navigate('/profile?tab=orders');
         }
       }
     } catch (error) {
@@ -178,31 +178,6 @@ const Checkout = () => {
       setIsProcessing(false);
     }
   };
-
-  if (orderComplete) {
-    return (
-      <div className="min-h-[calc(100vh-64px)] bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full bg-white p-10 rounded-2xl shadow-sm border border-gray-100 text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Confirmed!</h2>
-          <p className="text-gray-500 mb-2">Order #{orderComplete.orderNumber}</p>
-          <p className="text-sm text-gray-500 mb-8">
-            Your {orderComplete.orderType?.replace('_', '-')} order has been received by the kitchen.
-          </p>
-          <div className="space-y-4">
-            <button onClick={() => navigate('/profile?tab=orders')} className="w-full btn-primary">
-              Track Order
-            </button>
-            <button onClick={() => navigate('/')} className="w-full btn-secondary">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (!cart) return null;
 
@@ -284,24 +259,24 @@ const Checkout = () => {
                   {isScheduled && <CheckCircle2 className="h-5 w-5 text-primary-600 flex-shrink-0" />}
                 </label>
               </div>
-              
+
               {isScheduled && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5 p-5 border rounded-xl bg-gray-50">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <input 
-                      type="date" 
-                      min={new Date().toISOString().split('T')[0]} 
-                      className="input-field" 
+                    <input
+                      type="date"
+                      min={new Date().toISOString().split('T')[0]}
+                      className="input-field"
                       value={scheduledDate}
                       onChange={(e) => setScheduledDate(e.target.value)}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
-                    <input 
-                      type="time" 
-                      className="input-field" 
+                    <input
+                      type="time"
+                      className="input-field"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
                     />
@@ -327,13 +302,13 @@ const Checkout = () => {
                 {/* Tabs */}
                 {savedAddresses.length > 0 && (
                   <div className="flex gap-4 mb-6 border-b border-gray-100 pb-2">
-                    <button 
+                    <button
                       className={`pb-2 text-sm font-medium transition-colors ${addressMode === 'saved' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setAddressMode('saved')}
                     >
                       Saved Addresses
                     </button>
-                    <button 
+                    <button
                       className={`pb-2 text-sm font-medium transition-colors ${addressMode === 'new' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500 hover:text-gray-700'}`}
                       onClick={() => setAddressMode('new')}
                     >
@@ -345,12 +320,11 @@ const Checkout = () => {
                 {addressMode === 'saved' && savedAddresses.length > 0 ? (
                   <div className="space-y-3">
                     {savedAddresses.map(addr => (
-                      <div 
-                        key={addr._id} 
+                      <div
+                        key={addr._id}
                         onClick={() => setSelectedAddressId(addr._id)}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          selectedAddressId === addr._id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-200'
-                        }`}
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedAddressId === addr._id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-200'
+                          }`}
                       >
                         <div className="flex justify-between items-start mb-1">
                           <div className="flex items-center gap-2">
