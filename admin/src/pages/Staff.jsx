@@ -20,7 +20,7 @@ const Staff = () => {
     name: '',
     email: '',
     password: '',
-    staffRole: 'kitchen_staff',
+    staffRole: 'chef',
   });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Staff = () => {
       await dispatch(createStaff(form)).unwrap();
       toast.success('Staff member added');
       setShowModal(false);
-      setForm({ name: '', email: '', password: '', staffRole: 'kitchen_staff' });
+      setForm({ name: '', email: '', password: '', staffRole: 'chef' });
     } catch (err) {
       toast.error(err || 'Failed to add staff');
     }
@@ -50,8 +50,8 @@ const Staff = () => {
   };
 
   const roleLabels = {
-    kitchen_staff: { label: 'Kitchen Staff', color: 'bg-orange-100 text-orange-700' },
-    counter_staff: { label: 'Counter Staff', color: 'bg-blue-100 text-blue-700' },
+    chef: { label: 'Kitchen Staff', color: 'bg-orange-100 text-orange-700' },
+    cashier: { label: 'Counter Staff', color: 'bg-blue-100 text-blue-700' },
     delivery_staff: { label: 'Delivery Staff', color: 'bg-green-100 text-green-700' },
     manager: { label: 'Manager', color: 'bg-violet-100 text-violet-700' },
   };
