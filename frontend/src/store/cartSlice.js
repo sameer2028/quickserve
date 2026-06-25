@@ -12,7 +12,8 @@ export const fetchCart = createAsyncThunk('cart/fetchCart', async (_, { rejectWi
 
 export const addToCart = createAsyncThunk('cart/addToCart', async (itemData, { rejectWithValue }) => {
   try {
-    const response = await api.post('/cart/add', itemData);
+    const { item, ...apiData } = itemData;
+    const response = await api.post('/cart/add', apiData);
     return response.data.data.cart;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to add item');
@@ -68,6 +69,31 @@ const cartSlice = createSlice({
       .addCase(fetchCart.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(addToCart.pending, (state, action) => {
+        const { menuItemId, quantity, item } = action.meta.arg;
+        if (!state.cart) {
+          state.cart = { items: [], subtotal: 0, total: 0 };
+        }
+        
+        const existingItem = state.cart.items.find(i => 
+          i.menuItem === menuItemId || (i.menuItem && i.menuItem._id === menuItemId)
+        );
+        
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else if (item) {
+          state.cart.items.push({
+            _id: 'temp_' + Date.now(),
+            menuItem: item,
+            name: item.name,
+            price: item.discountPrice || item.price,
+            quantity: quantity,
+          });
+        }
+        
+        state.cart.subtotal = state.cart.items.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
+        state.cart.total = state.cart.subtotal;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.cart = action.payload;
