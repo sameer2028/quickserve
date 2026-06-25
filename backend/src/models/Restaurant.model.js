@@ -217,29 +217,19 @@ restaurantSchema.virtual('staff', {
 
 // ─── Methods ────────────────────────────────────────────
 restaurantSchema.methods.isOpenAt = function (date) {
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Kolkata',
-    hour: 'numeric',
-    minute: 'numeric',
-    weekday: 'long',
-    hourCycle: 'h23'
-  });
+  // Convert the input date to IST (UTC + 5:30)
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(date.getTime() + istOffset);
+
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const dayString = dayNames[istDate.getUTCDay()];
   
-  const parts = formatter.formatToParts(date);
-  
-  const dayPart = parts.find(p => p.type === 'weekday');
-  const hourPart = parts.find(p => p.type === 'hour');
-  const minutePart = parts.find(p => p.type === 'minute');
-  
-  if (!dayPart || !hourPart || !minutePart) return false;
-  
-  const dayString = dayPart.value.toLowerCase();
   const hours = this.operatingHours.find((h) => h.day === dayString);
 
   if (!hours || hours.isClosed) return false;
 
-  const currentHour = String(hourPart.value).replace(/\D/g, '').padStart(2, '0');
-  const currentMinute = String(minutePart.value).replace(/\D/g, '').padStart(2, '0');
+  const currentHour = String(istDate.getUTCHours()).padStart(2, '0');
+  const currentMinute = String(istDate.getUTCMinutes()).padStart(2, '0');
   
   const currentTime = `${currentHour}:${currentMinute}`;
   
