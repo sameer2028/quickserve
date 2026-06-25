@@ -235,7 +235,15 @@ restaurantSchema.methods.isOpenAt = function (date) {
   
   const currentTime = `${currentHour}:${currentMinute}`;
   
-  const isOpen = currentTime >= hours.open && currentTime <= hours.close;
+  let isOpen = false;
+  if (hours.close <= hours.open) {
+    // Overnight shift or midnight close (e.g. 11:00 to 00:00, or 18:00 to 02:00)
+    isOpen = currentTime >= hours.open || currentTime <= hours.close;
+  } else {
+    // Normal hours (e.g. 08:00 to 22:00)
+    isOpen = currentTime >= hours.open && currentTime <= hours.close;
+  }
+  
   return { isOpen, debug: `Day: ${dayString}, Time: ${currentTime}, Open: ${hours.open}, Close: ${hours.close}` };
 };
 
