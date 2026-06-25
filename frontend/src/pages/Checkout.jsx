@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { clearCart } from '../store/cartSlice';
 import toast from 'react-hot-toast';
-import { MapPin, Clock, CreditCard, CheckCircle2, Wallet, Truck, Store, UtensilsCrossed, Check } from 'lucide-react';
+import { MapPin, Clock, CreditCard, CheckCircle2, Wallet, Truck, Store, UtensilsCrossed, Check, Banknote } from 'lucide-react';
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
@@ -156,6 +156,11 @@ const Checkout = () => {
         // Wallet payment is instant
         dispatch(clearCart());
         toast.success('Order placed successfully! Paid via wallet.');
+        navigate('/profile?tab=orders');
+      } else if (paymentMethod === 'cash') {
+        // Cash on delivery
+        dispatch(clearCart());
+        toast.success('Order placed successfully! Pay on Delivery.');
         navigate('/profile?tab=orders');
       } else {
         // For card, we would integrate Stripe Elements here
@@ -471,6 +476,16 @@ const Checkout = () => {
                     <div>
                       <span className="font-medium text-gray-900">Credit / Debit Card</span>
                       <p className="text-xs text-gray-500">Pay securely via Stripe</p>
+                    </div>
+                  </div>
+                </label>
+                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'cash' ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                  <input type="radio" name="payment" value="cash" checked={paymentMethod === 'cash'} onChange={() => setPaymentMethod('cash')} className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500" />
+                  <div className="ml-3 flex items-center gap-2">
+                    <Banknote className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <span className="font-medium text-gray-900">Pay on Delivery</span>
+                      <p className="text-xs text-gray-500">Pay with cash or UPI at your doorstep</p>
                     </div>
                   </div>
                 </label>

@@ -58,6 +58,28 @@ exports.createPaymentIntent = async (req, res, next) => {
       });
     }
 
+    // Cash / Pay on Delivery payment
+    if (paymentMethod === 'cash') {
+      const payment = await Payment.create({
+        order: order._id,
+        user: req.user._id,
+        restaurant: order.restaurant,
+        amount: order.pricing.total,
+        method: 'cash',
+        status: 'pending',
+      });
+
+      order.payment = payment._id;
+      order.addStatusHistory('confirmed', req.user._id, 'Order confirmed with Pay on Delivery');
+      await order.save();
+
+      return res.status(200).json({
+        success: true,
+        message: 'Order confirmed with Pay on Delivery.',
+        data: { payment, order },
+      });
+    }
+
     // Stripe payment
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(order.pricing.total * 100), // Convert to paise
