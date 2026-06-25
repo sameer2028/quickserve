@@ -217,17 +217,32 @@ restaurantSchema.virtual('staff', {
 
 // ─── Methods ────────────────────────────────────────────
 restaurantSchema.methods.isOpenAt = function (date) {
-  const options = { timeZone: 'Asia/Kolkata' };
-  const dayString = new Intl.DateTimeFormat('en-US', { ...options, weekday: 'long' }).format(date).toLowerCase();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    weekday: 'long',
+    hourCycle: 'h23'
+  });
   
+  const parts = formatter.formatToParts(date);
+  
+  const dayPart = parts.find(p => p.type === 'weekday');
+  const hourPart = parts.find(p => p.type === 'hour');
+  const minutePart = parts.find(p => p.type === 'minute');
+  
+  if (!dayPart || !hourPart || !minutePart) return false;
+  
+  const dayString = dayPart.value.toLowerCase();
   const hours = this.operatingHours.find((h) => h.day === dayString);
 
   if (!hours || hours.isClosed) return false;
 
-  const currentHour = new Intl.DateTimeFormat('en-US', { ...options, hour: '2-digit', hourCycle: 'h23' }).format(date);
-  const currentMinute = new Intl.DateTimeFormat('en-US', { ...options, minute: '2-digit' }).format(date);
+  const currentHour = String(hourPart.value).replace(/\D/g, '').padStart(2, '0');
+  const currentMinute = String(minutePart.value).replace(/\D/g, '').padStart(2, '0');
   
   const currentTime = `${currentHour}:${currentMinute}`;
+  
   return currentTime >= hours.open && currentTime <= hours.close;
 };
 

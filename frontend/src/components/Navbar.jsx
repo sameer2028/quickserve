@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
-import { LogOut, User, ShoppingBag, Menu } from 'lucide-react';
+import { LogOut, User, ShoppingBag, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const Navbar = () => {
@@ -92,7 +92,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 hover:text-gray-900 focus:outline-none"
             >
-              <Menu size={24} />
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
@@ -100,25 +100,25 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden bg-white border-t border-gray-100">
-          <div className="pt-2 pb-3 space-y-1">
-            <Link to="/" className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">
+        <div className="sm:hidden absolute top-16 left-0 w-full bg-white shadow-xl border-t border-gray-100 z-40">
+          <div className="pt-2 pb-4 space-y-1 px-2">
+            <Link onClick={() => setIsMenuOpen(false)} to="/" className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors">
               Restaurants
             </Link>
             {isAuthenticated ? (
               <>
-                <Link to="/profile" className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Profile</Link>
+                <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors">Profile & Orders</Link>
                 <button
-                  onClick={handleLogout}
-                  className="w-full text-left block px-4 py-2 text-base font-medium text-red-600 hover:bg-red-50"
+                  onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                  className="w-full text-left block px-4 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50 transition-colors"
                 >
                   Sign out
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50">Log in</Link>
-                <Link to="/register" className="block px-4 py-2 text-base font-medium text-primary-600 hover:bg-primary-50">Sign up</Link>
+                <Link onClick={() => setIsMenuOpen(false)} to="/login" className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors">Log in</Link>
+                <Link onClick={() => setIsMenuOpen(false)} to="/register" className="block px-4 py-3 rounded-lg text-base font-medium text-primary-600 hover:bg-primary-50 transition-colors">Sign up</Link>
               </>
             )}
           </div>
