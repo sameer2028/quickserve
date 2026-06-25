@@ -69,7 +69,7 @@ exports.createOrder = async (req, res, next) => {
       // Immediate order - validate restaurant is currently open
       const openCheck = restaurant.isOpenAt(new Date());
       if (!openCheck.isOpen) {
-        return next(new AppError(`Restaurant is currently closed. [DEBUG: ${openCheck.debug}]`, 400));
+        return next(new AppError('Restaurant is currently closed.', 400));
       }
     }
 

@@ -227,7 +227,7 @@ restaurantSchema.methods.isOpenAt = function (date) {
   const hours = this.operatingHours.find((h) => h.day === dayString);
 
   if (!hours || hours.isClosed) {
-    return { isOpen: false, debug: `No hours found or isClosed is true for ${dayString}` };
+    return { isOpen: false, reason: 'Restaurant is closed at this time.' };
   }
 
   const currentHour = String(istDate.getUTCHours()).padStart(2, '0');
@@ -244,13 +244,13 @@ restaurantSchema.methods.isOpenAt = function (date) {
     isOpen = currentTime >= hours.open && currentTime <= hours.close;
   }
   
-  return { isOpen, debug: `Day: ${dayString}, Time: ${currentTime}, Open: ${hours.open}, Close: ${hours.close}` };
+  return { isOpen, reason: 'Restaurant is closed at this time.' };
 };
 
 restaurantSchema.methods.canAcceptOrderAt = async function (date, orderCount) {
   const openCheck = this.isOpenAt(date);
   if (!openCheck.isOpen) {
-    return { canAccept: false, reason: `Restaurant is closed at this time. [DEBUG: ${openCheck.debug}]` };
+    return { canAccept: false, reason: openCheck.reason };
   }
 
   const slotStart = new Date(date);

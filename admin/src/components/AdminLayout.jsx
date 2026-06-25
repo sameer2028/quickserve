@@ -39,10 +39,10 @@ const AdminLayout = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-gray-400 hover:text-gray-500 relative">
+            {/* <button className="p-2 text-gray-400 hover:text-gray-500 relative">
               <Bell className="h-6 w-6" />
               <span className="absolute top-1 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-            </button>
+            </button> */}
             
             <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
               <div className="hidden sm:flex flex-col text-right">
