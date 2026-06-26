@@ -30,7 +30,7 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider text-sm">For Restaurants</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="http://localhost:3001" className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Partner with us</a></li>
+              <li><a href="http://localhost:3001/apply" className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Partner with us</a></li>
               <li><a href="http://localhost:3001/login" className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Restaurant Login</a></li>
               <li><Link to="/terms" className="hover:text-primary-400 transition-colors">Terms of Service</Link></li>
               <li><Link to="/privacy" className="hover:text-primary-400 transition-colors">Privacy Policy</Link></li>

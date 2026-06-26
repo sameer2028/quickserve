@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login, clearError } from '../store/authSlice';
 
 const Login = () => {
@@ -99,6 +99,13 @@ const Login = () => {
               </button>
             </div>
           </form>
+          
+          <div className="mt-6 text-center text-sm">
+            <span className="text-gray-600">Want to partner with us? </span>
+            <Link to="/apply" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
+              Apply here
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 const Restaurant = require('../models/Restaurant.model');
 const Branch = require('../models/Branch.model');
+const RestaurantApplication = require('../models/RestaurantApplication.model');
 const { AppError } = require('../middlewares/error.middleware');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
@@ -371,6 +372,34 @@ exports.getBranches = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: { branches },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── Apply Restaurant ─────────────────────────────────────
+exports.applyRestaurant = async (req, res, next) => {
+  try {
+    const { restaurantName, ownerName, email, phone, city, cuisine } = req.body;
+
+    if (!restaurantName || !ownerName || !email || !phone || !city) {
+      return next(new AppError('Please provide all required fields (Restaurant Name, Owner Name, Email, Phone, City).', 400));
+    }
+
+    const application = await RestaurantApplication.create({
+      restaurantName,
+      ownerName,
+      email,
+      phone,
+      city,
+      cuisine,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Application submitted successfully. We will contact you shortly.',
+      data: { application },
     });
   } catch (error) {
     next(error);

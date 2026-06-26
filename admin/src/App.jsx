@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Pages
 import Login from './pages/Login';
+import Apply from './pages/Apply';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import MenuManagement from './pages/MenuManagement';
@@ -44,6 +45,7 @@ const App = () => {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/apply" element={<Apply />} />
         
         {/* Protected Admin Routes */}
         <Route 

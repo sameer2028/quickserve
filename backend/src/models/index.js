@@ -14,6 +14,7 @@ const Staff = require('./Staff.model');
 const Notification = require('./Notification.model');
 const Wallet = require('./Wallet.model');
 const KitchenQueue = require('./KitchenQueue.model');
+const RestaurantApplication = require('./RestaurantApplication.model');
 
 module.exports = {
   User,
@@ -32,4 +33,5 @@ module.exports = {
   Notification,
   Wallet,
   KitchenQueue,
+  RestaurantApplication,
 };

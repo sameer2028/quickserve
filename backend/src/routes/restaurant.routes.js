@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/temp/', limits: { fileSize: 5 * 1024 * 10
 
 // Public
 router.get('/', optionalAuth, restaurantController.getRestaurants);
+router.post('/apply', restaurantController.applyRestaurant);
 router.get('/slug/:slug', restaurantController.getRestaurantBySlug);
 router.get('/:id', restaurantController.getRestaurantById);
 router.get('/:id/time-slots', restaurantController.getAvailableTimeSlots);
