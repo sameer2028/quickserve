@@ -12,6 +12,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Apply = () => {
   const [formData, setFormData] = useState({
@@ -56,7 +57,10 @@ const Apply = () => {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+        <div className="absolute top-6 right-6">
+          <ThemeToggle />
+        </div>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="card px-6 py-12 sm:px-10 text-center flex flex-col items-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
@@ -81,6 +85,9 @@ const Apply = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       {/* Back to Login link top left */}
       <div className="absolute top-6 left-6">
         <Link to="/login" className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors font-medium">
