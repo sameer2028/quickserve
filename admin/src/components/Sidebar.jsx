@@ -39,9 +39,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       )}
       
       {/* Sidebar Content */}
-      <div className={`w-64 bg-white border-r border-gray-200 flex flex-col fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <div className="h-16 flex items-center px-6 border-b border-gray-200 shrink-0">
-          <h1 className="text-2xl font-bold text-gray-900">
+      <div className={`w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-slate-800 shrink-0">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Quick<span className="text-primary-600">Serve</span>
           </h1>
         </div>
@@ -58,8 +58,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }) =>
                   `flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-primary-50 dark:bg-primary-950/30 text-primary-700 dark:text-primary-400'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
                   }`
                 }
               >
@@ -71,10 +71,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 dark:border-slate-800">
         <button
           onClick={handleLogout}
-          className="flex w-full items-center px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-150"
+          className="flex w-full items-center px-3 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors duration-150"
         >
           <LogOut className="mr-3 h-5 w-5" />
           Logout

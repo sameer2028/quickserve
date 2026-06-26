@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <div className="bg-gray-50 min-h-screen pb-12">
       {/* Hero Section */}
-      <div className="bg-primary-600 pt-16 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="bg-primary-600 dark:bg-gradient-to-br dark:from-slate-900 dark:to-emerald-950 dark:border-b dark:border-slate-800/50 pt-16 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
         <div className="max-w-7xl mx-auto relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">

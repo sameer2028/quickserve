@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: #f0fdf4;
   --color-primary-100: #dcfce7;
@@ -15,10 +17,39 @@
   --font-sans: "Inter", sans-serif;
 }
 
+:root {
+  --bg-page: #f9fafb;
+  --text-main: #111827;
+  --bg-card: #ffffff;
+  --border-card: #f3f4f6;
+  --border-input: #d1d5db;
+  --bg-input: #ffffff;
+  --text-muted: #6b7280;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #374151;
+  --btn-secondary-border: #d1d5db;
+  --btn-secondary-hover: #f9fafb;
+}
+
+.dark {
+  --bg-page: #0f172a;
+  --text-main: #f8fafc;
+  --bg-card: #1e293b;
+  --border-card: #334155;
+  --border-input: #334155;
+  --bg-input: #0f172a;
+  --text-muted: #94a3b8;
+  --btn-secondary-bg: #1e293b;
+  --btn-secondary-text: #e2e8f0;
+  --btn-secondary-border: #334155;
+  --btn-secondary-hover: #334155;
+}
+
 body {
-  background-color: #f9fafb; /* gray-50 */
-  color: #111827; /* gray-900 */
+  background-color: var(--bg-page);
+  color: var(--text-main);
   font-family: "Inter", sans-serif;
+  transition: background-color 200ms, color 200ms;
 }
 
 .btn-primary {
@@ -37,9 +68,9 @@ body {
 }
 
 .btn-secondary {
-  background-color: white;
-  color: #374151; /* gray-700 */
-  border: 1px solid #d1d5db; /* gray-300 */
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -49,13 +80,15 @@ body {
 }
 
 .btn-secondary:hover {
-  background-color: #f9fafb; /* gray-50 */
+  background-color: var(--btn-secondary-hover);
 }
 
 .input-field {
   width: 100%;
   padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db; /* gray-300 */
+  border: 1px solid var(--border-input);
+  background-color: var(--bg-input);
+  color: var(--text-main);
   border-radius: 0.5rem;
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -71,9 +104,75 @@ body {
 }
 
 .card {
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 0.75rem;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border: 1px solid #f3f4f6; /* gray-100 */
+  border: 1px solid var(--border-card);
   overflow: hidden;
+}
+
+/* Utility class overrides for dark mode to support existing Tailwind layouts */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .text-gray-900 {
+  color: #f8fafc !important;
+}
+
+.dark .text-gray-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-gray-100 {
+  border-color: #334155 !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+/* Style HTML Select, inputs, and options in dark mode */
+.dark select,
+.dark input,
+.dark textarea {
+  color: #f8fafc !important;
+}
+
+.dark select option {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+.dark select option:disabled {
+  color: #475569 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
 }
