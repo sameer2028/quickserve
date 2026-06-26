@@ -450,7 +450,7 @@ const Profile = () => {
                             <div key={tx._id} className="flex justify-between items-center p-4 border border-gray-100 rounded-xl hover:bg-gray-50">
                               <div>
                                 <p className="font-medium text-gray-900">{tx.description}</p>
-                                <p className="text-xs text-gray-500">{new Date(tx.date).toLocaleString()}</p>
+                                <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleString()}</p>
                               </div>
                               <div className={`font-bold ${tx.type === 'credit' ? 'text-green-600' : 'text-gray-900'}`}>
                                 {tx.type === 'credit' ? '+' : '-'}₹{tx.amount}
