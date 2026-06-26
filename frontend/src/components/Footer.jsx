@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  const adminUrl = import.meta.env.VITE_ADMIN_URL || 'http://localhost:3001';
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,8 +31,8 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider text-sm">For Restaurants</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="http://localhost:3001/apply" className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Partner with us</a></li>
-              <li><a href="http://localhost:3001/login" className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Restaurant Login</a></li>
+              <li><a href={`${adminUrl}/apply`} className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Partner with us</a></li>
+              <li><a href={`${adminUrl}/login`} className="hover:text-primary-400 transition-colors" target="_blank" rel="noreferrer">Restaurant Login</a></li>
               <li><Link to="/terms" className="hover:text-primary-400 transition-colors">Terms of Service</Link></li>
               <li><Link to="/privacy" className="hover:text-primary-400 transition-colors">Privacy Policy</Link></li>
             </ul>
