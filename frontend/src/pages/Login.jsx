@@ -73,9 +73,13 @@ const Login = () => {
             <div>
               <div className="flex justify-between mb-1">
                 <label className="block text-sm font-medium text-gray-700">Password</label>
-                <Link to="/forgot-password" className="text-sm text-primary-600 hover:text-primary-500 font-medium">
+                <button
+                  type="button"
+                  onClick={() => toast.error('Please contact system administrator (admin@example.com) to reset your password, or use the pre-configured demo credentials.')}
+                  className="text-sm text-primary-600 hover:text-primary-500 font-medium focus:outline-none"
+                >
                   Forgot password?
-                </Link>
+                </button>
               </div>
               <div className="relative">
                 <input
