@@ -7,7 +7,8 @@ import {
   Users, 
   Settings, 
   BarChart3,
-  LogOut
+  LogOut,
+  CalendarClock
 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
@@ -23,6 +24,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Orders Queue', path: '/orders', icon: ListOrdered },
     { name: 'Menu Management', path: '/menu', icon: UtensilsCrossed },
+    { name: 'Reservations', path: '/reservations', icon: CalendarClock },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'Staff', path: '/staff', icon: Users },
     { name: 'Settings', path: '/settings', icon: Settings },

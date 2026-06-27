@@ -22,6 +22,9 @@ const Checkout = () => {
   const [orderComplete, setOrderComplete] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
 
+  // Reservation state
+  const [guestCount, setGuestCount] = useState(2);
+
   // Saved addresses state
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [addressMode, setAddressMode] = useState('saved'); // 'saved' or 'new'
@@ -39,10 +42,10 @@ const Checkout = () => {
   });
 
   useEffect(() => {
-    if (!cart || cart.items?.length === 0) {
+    if ((!cart || cart.items?.length === 0) && !orderComplete) {
       navigate('/cart');
     }
-  }, [cart, navigate]);
+  }, [cart, navigate, orderComplete]);
 
   // Fetch wallet balance and addresses
   useEffect(() => {
@@ -144,6 +147,21 @@ const Checkout = () => {
       const { data } = await api.post('/orders', orderPayload);
       const orderId = data.data.orderId;
 
+      // If dine_in, create a reservation
+      if (orderType === 'dine_in') {
+        const combinedDateTime = isScheduled ? new Date(`${scheduledDate}T${scheduledTime}`) : new Date();
+        const timeSlotStr = isScheduled ? `${scheduledTime}` : `${combinedDateTime.getHours().toString().padStart(2, '0')}:${combinedDateTime.getMinutes().toString().padStart(2, '0')}`;
+        
+        await api.post('/reservations', {
+          restaurantId: cart.restaurant._id,
+          date: combinedDateTime.toISOString(),
+          timeSlot: { start: timeSlotStr, end: 'TBD' },
+          guestCount,
+          specialRequests: specialInstructions,
+          orderId
+        });
+      }
+
       // Process payment
       const paymentPayload = {
         orderId,
@@ -155,26 +173,40 @@ const Checkout = () => {
       if (paymentMethod === 'wallet') {
         // Wallet payment is instant
         dispatch(clearCart());
-        toast.success('Order placed successfully! Paid via wallet.');
-        navigate('/profile?tab=orders');
+        if (orderType === 'dine_in') {
+          setOrderComplete('dine_in');
+        } else {
+          toast.success('Order placed successfully! Paid via wallet.');
+          navigate('/profile?tab=orders');
+        }
       } else if (paymentMethod === 'cash') {
         // Cash on delivery
         dispatch(clearCart());
-        toast.success('Order placed successfully! Pay on Delivery.');
-        navigate('/profile?tab=orders');
+        if (orderType === 'dine_in') {
+          setOrderComplete('dine_in');
+        } else {
+          toast.success('Order placed successfully! Pay on Delivery.');
+          navigate('/profile?tab=orders');
+        }
       } else {
         // For card, we would integrate Stripe Elements here
-        // For demo/testing, try to confirm directly
         try {
           await api.post('/payments/confirm', { paymentIntentId: paymentRes.data.data.paymentIntentId });
           dispatch(clearCart());
-          toast.success('Payment successful! Order placed.');
-          navigate('/profile?tab=orders');
+          if (orderType === 'dine_in') {
+            setOrderComplete('dine_in');
+          } else {
+            toast.success('Payment successful! Order placed.');
+            navigate('/profile?tab=orders');
+          }
         } catch {
-          // If Stripe confirm fails (no real Stripe setup), still show success for the order
           dispatch(clearCart());
-          toast.success('Order placed! Payment pending.');
-          navigate('/profile?tab=orders');
+          if (orderType === 'dine_in') {
+            setOrderComplete('dine_in');
+          } else {
+            toast.success('Order placed! Payment pending.');
+            navigate('/profile?tab=orders');
+          }
         }
       }
     } catch (error) {
@@ -183,6 +215,30 @@ const Checkout = () => {
       setIsProcessing(false);
     }
   };
+
+  if (orderComplete === 'dine_in') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 dark:bg-slate-900 p-4">
+        <div className="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 text-center border border-gray-100 dark:border-slate-700">
+          <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+             <Clock className="w-10 h-10" />
+          </div>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Reservation Pending</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+            Your table reservation request has been sent to the restaurant. 
+            <br/><br/>
+            <strong>It will be confirmed by the restaurant within ~5 minutes.</strong>
+          </p>
+          <button 
+            onClick={() => navigate('/profile?tab=reservations')}
+            className="btn-primary w-full py-4 text-lg"
+          >
+            Track Reservation Status
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!cart) return null;
 
@@ -215,7 +271,7 @@ const Checkout = () => {
                       key={opt.value}
                       className={`
                         relative flex cursor-pointer rounded-xl border p-4 shadow-sm focus:outline-none transition-all
-                        ${orderType === opt.value ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}
+                        ${orderType === opt.value ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}
                       `}
                     >
                       <input
@@ -249,14 +305,14 @@ const Checkout = () => {
                 Order Timing
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <label className={`flex cursor-pointer rounded-xl border p-4 shadow-sm focus:outline-none transition-all ${!isScheduled ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                <label className={`flex cursor-pointer rounded-xl border p-4 shadow-sm focus:outline-none transition-all ${!isScheduled ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                   <input type="radio" name="timing" checked={!isScheduled} onChange={() => setIsScheduled(false)} className="sr-only" />
                   <span className="flex flex-1 items-center gap-3">
                     <span className="block text-sm font-semibold text-gray-900">Order Now</span>
                   </span>
                   {!isScheduled && <CheckCircle2 className="h-5 w-5 text-primary-600 flex-shrink-0" />}
                 </label>
-                <label className={`flex cursor-pointer rounded-xl border p-4 shadow-sm focus:outline-none transition-all ${isScheduled ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                <label className={`flex cursor-pointer rounded-xl border p-4 shadow-sm focus:outline-none transition-all ${isScheduled ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                   <input type="radio" name="timing" checked={isScheduled} onChange={() => setIsScheduled(true)} className="sr-only" />
                   <span className="flex flex-1 items-center gap-3">
                     <span className="block text-sm font-semibold text-gray-900">Schedule for Later</span>
@@ -294,6 +350,34 @@ const Checkout = () => {
               )}
             </div>
 
+            {/* Table Reservation Info - Only when Dine-In is selected */}
+            {orderType === 'dine_in' && (
+              <div className="card p-6 border-l-4 border-l-primary-500">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <UtensilsCrossed className="w-5 h-5 text-primary-600" />
+                    Table Reservation Details
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Guests *</label>
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      value={guestCount}
+                      onChange={(e) => setGuestCount(e.target.value)}
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-4 italic">
+                  Note: Your reservation will be subject to manual confirmation by the restaurant after you place the order.
+                </p>
+              </div>
+            )}
+
             {/* Delivery Address - Only when delivery is selected */}
             {orderType === 'delivery' && (
               <div className="card p-6">
@@ -328,7 +412,7 @@ const Checkout = () => {
                       <div
                         key={addr._id}
                         onClick={() => setSelectedAddressId(addr._id)}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedAddressId === addr._id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-primary-200'
+                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedAddressId === addr._id ? 'border-primary-500 bg-primary-50 dark:bg-primary-700/20' : 'border-gray-200 hover:border-primary-200'
                           }`}
                       >
                         <div className="flex justify-between items-start mb-1">
@@ -452,7 +536,7 @@ const Checkout = () => {
                 Payment Method
               </h2>
               <div className="space-y-3">
-                <label className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'wallet' ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                <label className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'wallet' ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                   <div className="flex items-center gap-3">
                     <input type="radio" name="payment" value="wallet" checked={paymentMethod === 'wallet'} onChange={() => setPaymentMethod('wallet')} className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500" />
                     <div className="flex items-center gap-2">
@@ -469,7 +553,7 @@ const Checkout = () => {
                     </span>
                   )}
                 </label>
-                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                   <input type="radio" name="payment" value="card" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500" />
                   <div className="ml-3 flex items-center gap-2">
                     <CreditCard className="w-5 h-5 text-gray-500" />
@@ -479,7 +563,7 @@ const Checkout = () => {
                     </div>
                   </div>
                 </label>
-                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'cash' ? 'border-primary-600 bg-primary-50 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
+                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'cash' ? 'border-primary-600 bg-primary-50 dark:bg-primary-700/20 ring-1 ring-primary-600' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
                   <input type="radio" name="payment" value="cash" checked={paymentMethod === 'cash'} onChange={() => setPaymentMethod('cash')} className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500" />
                   <div className="ml-3 flex items-center gap-2">
                     <Banknote className="w-5 h-5 text-gray-500" />

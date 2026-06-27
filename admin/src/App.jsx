@@ -12,6 +12,7 @@ import MenuManagement from './pages/MenuManagement';
 import Analytics from './pages/Analytics';
 import Staff from './pages/Staff';
 import Settings from './pages/Settings';
+import Reservations from './pages/Reservations';
 
 // Layout
 import AdminLayout from './components/AdminLayout';
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="orders" element={<Orders />} />
           <Route path="menu" element={<MenuManagement />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="reservations" element={<Reservations />} />
           <Route path="staff" element={<Staff />} />
           <Route path="settings" element={<Settings />} />
         </Route>

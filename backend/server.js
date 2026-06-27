@@ -34,6 +34,7 @@ const kitchenRoutes = require('./src/routes/kitchen.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const walletRoutes = require('./src/routes/wallet.routes');
 const analyticsRoutes = require('./src/routes/analytics.routes');
+const reservationRoutes = require('./src/routes/reservation.routes');
 
 // Import error handler
 const { errorHandler, notFound } = require('./src/middlewares/error.middleware');
@@ -108,6 +109,7 @@ app.use(`${API_PREFIX}/kitchen`, kitchenRoutes);
 app.use(`${API_PREFIX}/admin`, adminRoutes);
 app.use(`${API_PREFIX}/wallet`, walletRoutes);
 app.use(`${API_PREFIX}/analytics`, analyticsRoutes);
+app.use(`${API_PREFIX}/reservations`, reservationRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { User, Package, MapPin, Wallet, LogOut, Edit2, Check, X } from 'lucide-react';
+import { User, Package, MapPin, Wallet, LogOut, Edit2, Check, X, CalendarClock } from 'lucide-react';
 import { logout, getMe } from '../store/authSlice';
 
 const Profile = () => {
@@ -15,6 +15,7 @@ const Profile = () => {
 
   const [orders, setOrders] = useState([]);
   const [wallet, setWallet] = useState(null);
+  const [reservations, setReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Profile Edit State
@@ -66,6 +67,9 @@ const Profile = () => {
         } else if (activeTab === 'profile') {
           const { data } = await api.get('/users/addresses');
           setAddresses(data.data.addresses);
+        } else if (activeTab === 'reservations') {
+          const { data } = await api.get('/reservations');
+          setReservations(data.data.reservations);
         }
       } catch (error) {
         toast.error('Failed to load data');
@@ -77,9 +81,9 @@ const Profile = () => {
     // Initial fetch
     fetchData(true);
 
-    // Set up polling every 5 seconds for live order status tracking
+    // Set up polling every 5 seconds for live order and reservation status tracking
     let interval;
-    if (activeTab === 'orders') {
+    if (activeTab === 'orders' || activeTab === 'reservations') {
       interval = setInterval(() => {
         fetchData(false);
       }, 5000);
@@ -161,6 +165,7 @@ const Profile = () => {
                 {[
                   { id: 'profile', label: 'My Profile', icon: User },
                   { id: 'orders', label: 'Order History', icon: Package },
+                  { id: 'reservations', label: 'My Reservations', icon: CalendarClock },
                   { id: 'wallet', label: 'QuickServe Wallet', icon: Wallet },
                 ].map((item) => (
                   <button
@@ -414,6 +419,50 @@ const Profile = () => {
                                 <button className="px-4 py-2 border border-primary-600 text-primary-600 hover:bg-primary-50 rounded-lg text-sm font-medium transition-colors">
                                   Reorder
                                 </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Reservations Tab */}
+                  {activeTab === 'reservations' && (
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">My Reservations</h2>
+                      {reservations.length === 0 ? (
+                        <div className="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-8 text-center">
+                          <CalendarClock className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                          <p className="text-gray-500 mb-4">You haven't made any reservations yet.</p>
+                          <button onClick={() => navigate('/')} className="btn-primary">Browse Restaurants</button>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {reservations.map((res) => (
+                            <div key={res._id} className={`border rounded-xl p-5 hover:shadow-sm transition-shadow ${res.status === 'confirmed' ? 'border-primary-300' : 'border-gray-200'}`}>
+                              <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-2 gap-4">
+                                <div className="flex items-center gap-3">
+                                  <h3 className="text-lg font-bold text-gray-900">{res.restaurant?.name || 'Restaurant'}</h3>
+                                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
+                                      res.status === 'confirmed' ? 'bg-green-100 text-green-700' :
+                                      res.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                                      res.status === 'checked_in' ? 'bg-blue-100 text-blue-700' :
+                                      'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    {res.status.replace('_', ' ')}
+                                  </span>
+                                </div>
+                                <div className="text-left sm:text-right">
+                                  <p className="text-sm font-semibold text-gray-900">
+                                    {new Date(res.date).toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' })} at {res.timeSlot?.start}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-sm text-gray-600 grid grid-cols-2 gap-2 mt-4">
+                                <div><span className="text-gray-500">Guests:</span> <span className="font-medium text-gray-900">{res.guestCount}</span></div>
+                                <div><span className="text-gray-500">Table:</span> <span className="font-medium text-gray-900">{res.assignedTable?.tableNumber || 'Pending Assignment'}</span></div>
+                                {res.specialRequests && <div className="col-span-2 mt-2"><span className="text-gray-500">Requests:</span> <span className="italic">{res.specialRequests}</span></div>}
                               </div>
                             </div>
                           ))}

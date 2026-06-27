@@ -112,6 +112,10 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Delivery',
     },
+    reservation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reservation',
+    },
     estimatedPrepTime: {
       type: Number, // minutes
     },

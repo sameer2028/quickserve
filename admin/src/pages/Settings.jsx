@@ -12,6 +12,9 @@ import {
   Phone,
   Mail,
   IndianRupee,
+  Grid2X2,
+  Trash2,
+  Plus
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -38,8 +41,25 @@ const Settings = () => {
     },
   });
 
+  const [tables, setTables] = useState([]);
+  const [newTable, setNewTable] = useState({ tableNumber: '', capacity: '' });
+  const [loadingTables, setLoadingTables] = useState(false);
+
+  const fetchTables = async () => {
+    try {
+      setLoadingTables(true);
+      const res = await api.get('/reservations/tables');
+      setTables(res.data.data.tables);
+    } catch (error) {
+      console.error('Failed to fetch tables');
+    } finally {
+      setLoadingTables(false);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchMyRestaurant());
+    fetchTables();
   }, [dispatch]);
 
   useEffect(() => {
@@ -96,8 +116,30 @@ const Settings = () => {
   const toggleFeature = (key) => {
     setForm((prev) => ({
       ...prev,
-      features: { ...prev.features, [key]: !prev.features[key] },
+      features: { ...prev.features, [key] : !prev.features[key] },
     }));
+  };
+
+  const handleAddTable = async () => {
+    if (!newTable.tableNumber || !newTable.capacity) return toast.error('Please enter table number and capacity');
+    try {
+      await api.post('/reservations/tables', { ...newTable, capacity: Number(newTable.capacity) });
+      toast.success('Table added');
+      setNewTable({ tableNumber: '', capacity: '' });
+      fetchTables();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to add table');
+    }
+  };
+
+  const handleRemoveTable = async (id) => {
+    try {
+      await api.delete(`/reservations/tables/${id}`);
+      toast.success('Table removed');
+      fetchTables();
+    } catch (error) {
+      toast.error('Failed to remove table');
+    }
   };
 
   if (!restaurant) {
@@ -301,6 +343,61 @@ const Settings = () => {
             </div>
           </div>
         )}
+
+        {/* Table Management */}
+        <div className="card p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <Grid2X2 className="h-5 w-5 text-primary-600" />
+            Table Management
+          </h3>
+          
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+             <input 
+               type="text" 
+               placeholder="Table Number/Name (e.g., T1)" 
+               className="input-field w-full sm:flex-1 min-w-[150px]"
+               value={newTable.tableNumber}
+               onChange={(e) => setNewTable({...newTable, tableNumber: e.target.value})}
+             />
+             <input 
+               type="number" 
+               placeholder="Capacity (e.g., 4)" 
+               className="input-field w-full sm:w-32"
+               value={newTable.capacity}
+               onChange={(e) => setNewTable({...newTable, capacity: e.target.value})}
+             />
+             <button 
+               type="button" 
+               onClick={handleAddTable}
+               className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center justify-center gap-2"
+             >
+               <Plus className="h-4 w-4" /> Add
+             </button>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {loadingTables ? <div className="col-span-full text-center py-4 text-gray-500">Loading tables...</div> : tables.map(table => (
+              <div key={table._id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col justify-between group relative overflow-hidden">
+                 <div className="text-center">
+                    <div className="text-xl font-bold text-gray-900">{table.tableNumber}</div>
+                    <div className="text-xs text-gray-500 mt-1">Capacity: {table.capacity}</div>
+                 </div>
+                 <button 
+                   type="button"
+                   onClick={() => handleRemoveTable(table._id)}
+                   className="absolute top-0 right-0 p-2 bg-red-100 text-red-600 rounded-bl-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
+                 >
+                    <Trash2 className="h-3 w-3" />
+                 </button>
+              </div>
+            ))}
+            {!loadingTables && tables.length === 0 && (
+               <div className="col-span-full text-center py-4 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                  No tables added yet. Add your first table above.
+               </div>
+            )}
+          </div>
+        </div>
 
         {/* Save */}
         <div className="flex justify-end">
