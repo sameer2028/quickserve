@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickServe - Project Gateway Portal</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Welcome to the QuickServe project submission portal. Access the restaurant pre-ordering user application, the restaurant administration dashboard, test credentials, and project documentation in one place.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              500: '#f97316', // Vibrant Orange for QuickServe
+              600: '#ea580c',
+              700: '#c2410c',
+            },
+            admin: {
+              50: '#f0fdfa',
+              500: '#0d9488', // Teal for Admin Dashboard
+              600: '#0f766e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Premium custom styling and animations */
+    body {
+      background-color: #0b0f19;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(13, 148, 136, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.95) 0px, transparent 70%);
+      background-attachment: fixed;
+    }
+    
+    .glass-card {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .animate-slide-up {
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="text-slate-200 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- Main Container -->
+  <main class="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-6xl flex flex-col justify-center">
+    
+    <!-- Header Section -->
+    <header class="text-center mb-10 md:mb-14 animate-fade-in">
+      <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full glass-card border border-brand-500/20 text-brand-500 font-medium text-sm mb-4">
+        <i data-lucide="sparkles" class="w-4 h-4 text-brand-500 animate-pulse"></i>
+        <span>Submission Gateway Portal</span>
+      </div>
+      <h1 class="font-display font-extrabold text-4xl md:text-6xl tracking-tight text-white mb-4">
+        Quick<span class="bg-gradient-to-r from-brand-500 to-amber-400 bg-clip-text text-transparent">Serve</span>
+      </h1>
+      <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-6">
+        A premium full-stack restaurant pre-ordering and management ecosystem. Explore the customer experience and administration suite below.
+      </p>
+      
+      <!-- Team Card -->
+      <div class="glass-card max-w-xl mx-auto rounded-2xl p-4 md:p-6 border border-slate-800 text-left">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="users" class="w-5 h-5 text-brand-500"></i>
+            <span class="font-semibold text-white">Team Details</span>
+          </div>
+          <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono font-medium">Quantum Coders</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="flex flex-col">
+            <span class="text-slate-400 text-xs">Saurabh Gupta</span>
+            <span class="font-mono text-slate-300 text-xs">SAUR506D37</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-slate-400 text-xs">Sameer Upadhyay</span>
+            <span class="font-mono text-slate-300 text-xs">SAME502942</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-slate-400 text-xs">Kanak Sonkar</span>
+            <span class="font-mono text-slate-300 text-xs">KANA48A52D</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-slate-400 text-xs">Vishal Kumar</span>
+            <span class="font-mono text-slate-300 text-xs">VISH69A14C</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid Content -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start animate-slide-up">
+      
+      <!-- LEFT COLUMN: Client / Customer App Space -->
+      <div class="flex flex-col gap-6">
+        
+        <!-- CARD 1: CUSTOMER APP -->
+        <section class="glass-card rounded-3xl p-6 md:p-8 transition-all duration-300 relative group overflow-hidden border border-slate-800">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full blur-3xl group-hover:bg-brand-500/20 transition-all duration-500"></div>
+          <div class="flex flex-col md:flex-row md:items-start gap-5">
+            <div class="p-4 bg-brand-500/10 text-brand-500 rounded-2xl self-start group-hover:scale-110 transition-transform duration-300">
+              <i data-lucide="store" class="w-8 h-8"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h2 class="text-2xl font-bold text-white group-hover:text-brand-500 transition-colors">Customer Web App</h2>
+                <span class="bg-brand-500/10 text-brand-500 text-xs font-semibold px-2 py-0.5 rounded-full border border-brand-500/20">Client App</span>
+              </div>
+              <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                Empower users to browse local menus, schedule pre-orders, add to cart, pay via Stripe, and track statuses in real-time.
+              </p>
+              <ul class="space-y-2 mb-6 text-sm text-slate-300">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-brand-500"></i>
+                  <span>Browse menus, filter by category, search dishes</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-brand-500"></i>
+                  <span>Secure checkout integrated with Stripe payments</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-brand-500"></i>
+                  <span>Live order tracking status via WebSockets</span>
+                </li>
+              </ul>
+              
+              <a href="https://quickserve-alpha-six.vercel.app/login" id="customer-app-link" target="_blank" class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-semibold rounded-xl shadow-lg shadow-brand-500/20 transition-all duration-300 group-hover:shadow-brand-500/30">
+                <span>Launch Customer App</span>
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- CUSTOMER CREDENTIALS BOX -->
+        <section class="glass-card rounded-3xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="key" class="w-5 h-5 text-brand-500"></i>
+              <h3 class="font-bold text-white text-lg">Customer Credentials</h3>
+            </div>
+            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+              <i data-lucide="info" class="w-3 h-3"></i> One-Click Copy
+            </span>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- Credential 3: Customer -->
+            <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl relative hover:border-slate-700 transition-all group/cred">
+              <span class="text-xs uppercase font-bold tracking-wider text-brand-500 mb-2 block">Test Customer Account</span>
+              
+              <div class="flex flex-col gap-2 mt-2">
+                <div class="flex items-center justify-between bg-slate-950/80 px-3 py-2 rounded-lg text-sm font-mono">
+                  <span class="text-slate-400 truncate mr-2" id="cust-email">customer@example.com</span>
+                  <button onclick="copyText('cust-email', this)" class="text-slate-500 hover:text-brand-500 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span class="text-[10px] uppercase font-bold tracking-wider">Copy</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950/80 px-3 py-2 rounded-lg text-sm font-mono">
+                  <span class="text-slate-400" id="cust-pass">12345678</span>
+                  <button onclick="copyText('cust-pass', this)" class="text-slate-500 hover:text-brand-500 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span class="text-[10px] uppercase font-bold tracking-wider">Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Restaurant App & Admin Space -->
+      <div class="flex flex-col gap-6">
+        
+        <!-- CARD 2: ADMIN APP -->
+        <section class="glass-card rounded-3xl p-6 md:p-8 transition-all duration-300 relative group overflow-hidden border border-slate-800">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-admin-500/10 rounded-full blur-3xl group-hover:bg-admin-500/20 transition-all duration-500"></div>
+          <div class="flex flex-col md:flex-row md:items-start gap-5">
+            <div class="p-4 bg-admin-500/10 text-admin-500 rounded-2xl self-start group-hover:scale-110 transition-transform duration-300">
+              <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h2 class="text-2xl font-bold text-white group-hover:text-admin-500 transition-colors">Restaurant Dashboard</h2>
+                <span class="bg-admin-500/10 text-admin-500 text-xs font-semibold px-2 py-0.5 rounded-full border border-admin-500/20">Admin App</span>
+              </div>
+              <p class="text-slate-400 text-sm mb-4 leading-relaxed">
+                Full dashboard for restaurant owners and staff to manage menu offerings, approve/decline orders, and visualize analytics.
+              </p>
+              <ul class="space-y-2 mb-6 text-sm text-slate-300">
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-admin-500"></i>
+                  <span>Real-time kitchen order queue updates</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-admin-500"></i>
+                  <span>Recharts-powered sales and performance statistics</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-admin-500"></i>
+                  <span>Full menu management controls</span>
+                </li>
+              </ul>
+              
+              <a href="https://quickserve-4xer.vercel.app/login" id="admin-app-link" target="_blank" class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-admin-600 to-teal-500 hover:from-admin-500 hover:to-teal-400 text-white font-semibold rounded-xl shadow-lg shadow-admin-500/20 transition-all duration-300 group-hover:shadow-admin-500/30">
+                <span>Launch Restaurant Dashboard</span>
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADMIN/STAFF CREDENTIALS BOX -->
+        <section class="glass-card rounded-3xl p-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="key" class="w-5 h-5 text-admin-500"></i>
+              <h3 class="font-bold text-white text-lg">Restaurant Staff Credentials</h3>
+            </div>
+            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+              <i data-lucide="info" class="w-3 h-3"></i> One-Click Copy
+            </span>
+          </div>
+          
+          <div class="space-y-4">
+            
+            <!-- Credential 1: Restaurant Owner (Spicy Bite) -->
+            <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-2xl relative hover:border-slate-700 transition-all group/cred">
+              <span class="text-[10px] uppercase font-bold tracking-wider text-teal-400 mb-1 block">Restaurant Staff (Spicy Bite)</span>
+              
+              <div class="flex flex-col gap-1.5 mt-2">
+                <div class="flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-lg text-xs font-mono">
+                  <span class="text-slate-400 truncate mr-2" id="owner-email">owner@example.com</span>
+                  <button onclick="copyText('owner-email', this)" class="text-slate-500 hover:text-teal-400 transition-colors flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span class="text-[9px] uppercase font-bold tracking-wider ml-1">Copy</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-lg text-xs font-mono">
+                  <span class="text-slate-400" id="owner-pass">12345678</span>
+                  <button onclick="copyText('owner-pass', this)" class="text-slate-500 hover:text-teal-400 transition-colors flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span class="text-[9px] uppercase font-bold tracking-wider ml-1">Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Credential 2: Restaurant Owner (Slice Haven) -->
+            <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-2xl relative hover:border-slate-700 transition-all group/cred">
+              <span class="text-[10px] uppercase font-bold tracking-wider text-teal-400 mb-1 block">Restaurant Staff (Slice Haven Pizzeria)</span>
+              
+              <div class="flex flex-col gap-1.5 mt-2">
+                <div class="flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-lg text-xs font-mono">
+                  <span class="text-slate-400 truncate mr-2" id="pizz-email">mario@slicehaven.com</span>
+                  <button onclick="copyText('pizz-email', this)" class="text-slate-500 hover:text-teal-400 transition-colors flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span class="text-[9px] uppercase font-bold tracking-wider ml-1">Copy</span>
+                  </button>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-lg text-xs font-mono">
+                  <span class="text-slate-400" id="pizz-pass">password123</span>
+                  <button onclick="copyText('pizz-pass', this)" class="text-slate-500 hover:text-teal-400 transition-colors flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <span class="text-[9px] uppercase font-bold tracking-wider ml-1">Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- FULL WIDTH BOTTOM: GitHub Repository -->
+      <div class="md:col-span-2 mt-2">
+        <!-- CARD 3: CODEBASE -->
+        <section class="glass-card rounded-2xl p-5 border border-slate-800 flex items-center justify-between group transition-all duration-300">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-slate-800 rounded-xl text-slate-300">
+              <i data-lucide="github" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-white group-hover:text-brand-500 transition-colors">GitHub Repository</h3>
+              <p class="text-xs text-slate-400">View code structure, microservices, and deploy setups</p>
+            </div>
+          </div>
+          <a href="https://github.com/sameer2028/quickserve" target="_blank" class="p-2.5 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl transition-all text-slate-200 hover:text-white">
+            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+          </a>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto py-8 border-t border-slate-900 bg-slate-950/40 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-6xl">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+        <span>Fast, Secure, Real-time pre-ordering suite.</span>
+      </div>
+      <div>
+        Built with React 19 • Node.js • Express • MongoDB • Socket.io • Tailwind CSS
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="fixed bottom-5 right-5 flex flex-col gap-2 z-50 pointer-events-none"></div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Helper function for custom deployment URL configuration
+    // Edit these variables to point to your live hosted URLs (e.g. Vercel, Netlify, Render)
+    const DEPLOYMENT_URLS = {
+      customerApp: "https://quickserve-alpha-six.vercel.app/login", // Default local path (relative to repo root if built)
+      adminDashboard: "https://quickserve-4xer.vercel.app/login", // Default local path (relative to repo root if built)
+    };
+
+    // Auto-update links if specific deployment targets are set (can fall back to local relative paths)
+    document.addEventListener("DOMContentLoaded", () => {
+      const customerLink = document.getElementById("customer-app-link");
+      const adminLink = document.getElementById("admin-app-link");
+
+      // Replace these strings with your actual deployed website addresses if hosted online:
+      // example: customerLink.href = "https://quickserve-frontend.vercel.app";
+      // example: adminLink.href = "https://quickserve-admin.vercel.app";
+    });
+
+    // Copy to Clipboard logic
+    function copyText(elementId, buttonElement) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        // Change icon and text temporarily to checkmark and "Copied"
+        const icon = buttonElement.querySelector('i');
+        const span = buttonElement.querySelector('span');
+        
+        let originalIconName = '';
+        if (icon) {
+          originalIconName = icon.getAttribute('data-lucide');
+          icon.setAttribute('data-lucide', 'check');
+        }
+        
+        let originalText = '';
+        if (span) {
+          originalText = span.innerText;
+          span.innerText = 'Copied';
+        }
+        
+        buttonElement.classList.add('text-emerald-400');
+        lucide.createIcons(); // Redraw icons
+        
+        showToast(`Copied: "${textToCopy}"`);
+
+        setTimeout(() => {
+          if (icon && originalIconName) {
+            icon.setAttribute('data-lucide', originalIconName);
+          }
+          if (span) {
+            span.innerText = originalText;
+          }
+          buttonElement.classList.remove('text-emerald-400');
+          lucide.createIcons(); // Redraw original icon/text
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+
+    // Custom Toast popup logic
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      toast.className = 'glass-card border-emerald-500/20 bg-slate-900/90 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-lg border flex items-center gap-2 pointer-events-auto animate-fade-in translate-y-2 transition-transform duration-300';
+      toast.innerHTML = `
+        <div class="p-1 bg-emerald-500/20 text-emerald-400 rounded-full">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <span>${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto dismiss after 2.5 seconds
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-[-10px]');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
