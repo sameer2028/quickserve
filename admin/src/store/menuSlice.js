@@ -101,6 +101,22 @@ export const deleteMenuItem = createAsyncThunk(
   }
 );
 
+export const uploadMenuItemImage = createAsyncThunk(
+  'menu/uploadMenuItemImage',
+  async ({ id, file }, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append('images', file);
+      const response = await api.post(`/menu/items/${id}/images`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return { id, images: response.data.data.images };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to upload image');
+    }
+  }
+);
+
 const menuSlice = createSlice({
   name: 'menu',
   initialState: {
@@ -151,6 +167,12 @@ const menuSlice = createSlice({
       .addCase(updateMenuItem.fulfilled, (state, action) => {
         const idx = state.items.findIndex(i => i._id === action.payload._id);
         if (idx !== -1) state.items[idx] = action.payload;
+      })
+      .addCase(uploadMenuItemImage.fulfilled, (state, action) => {
+        const idx = state.items.findIndex(i => i._id === action.payload.id);
+        if (idx !== -1) {
+          state.items[idx].images = action.payload.images;
+        }
       })
       .addCase(deleteMenuItem.fulfilled, (state, action) => {
         state.items = state.items.filter(i => i._id !== action.payload);

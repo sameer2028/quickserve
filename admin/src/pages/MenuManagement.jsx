@@ -9,6 +9,7 @@ import {
   createMenuItem,
   updateMenuItem,
   deleteMenuItem,
+  uploadMenuItemImage,
 } from '../store/menuSlice';
 import { fetchMyRestaurant } from '../store/dashboardSlice';
 import {
@@ -60,6 +61,7 @@ const MenuManagement = () => {
     preparationTime: '15',
     category: '',
   });
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     dispatch(fetchMyRestaurant());
@@ -120,6 +122,7 @@ const MenuManagement = () => {
 
   // ─── Item CRUD ─────────────────────────────────────────
   const openItemModal = (categoryId, item = null) => {
+    setImageFile(null);
     if (item) {
       setItemForm({
         name: item.name,
@@ -140,17 +143,26 @@ const MenuManagement = () => {
     e.preventDefault();
     const data = { ...itemForm, price: parseFloat(itemForm.price), preparationTime: parseInt(itemForm.preparationTime) };
     try {
+      let savedItem;
       if (itemModal.editing) {
-        await dispatch(updateMenuItem({ id: itemModal.editing._id, data })).unwrap();
+        savedItem = await dispatch(updateMenuItem({ id: itemModal.editing._id, data })).unwrap();
         toast.success('Item updated');
       } else {
-        await dispatch(createMenuItem(data)).unwrap();
+        savedItem = await dispatch(createMenuItem(data)).unwrap();
         toast.success('Item created');
       }
+
+      if (imageFile && savedItem) {
+        toast.loading('Uploading image...', { id: 'imageUpload' });
+        await dispatch(uploadMenuItemImage({ id: savedItem._id, file: imageFile })).unwrap();
+        toast.success('Image uploaded successfully', { id: 'imageUpload' });
+      }
+
       setItemModal({ open: false, editing: null, categoryId: null });
       // Refresh items
       if (restaurant?._id) dispatch(fetchMenuItems(restaurant._id));
     } catch (err) {
+      toast.dismiss('imageUpload');
       toast.error(err || 'Failed');
     }
   };
@@ -226,7 +238,7 @@ const MenuManagement = () => {
               <div key={cat._id} className="card overflow-hidden">
                 {/* Category Header */}
                 <div
-                  className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
                   onClick={() => toggleCategory(cat._id)}
                 >
                   <div className="flex items-center gap-3">
@@ -236,10 +248,10 @@ const MenuManagement = () => {
                       <ChevronRight className="h-5 w-5 text-gray-400" />
                     )}
                     <div>
-                      <h3 className="font-semibold text-gray-900">{cat.name}</h3>
-                      {cat.description && <p className="text-sm text-gray-500 mt-0.5">{cat.description}</p>}
+                      <h3 className="font-semibold text-gray-900 dark:text-white">{cat.name}</h3>
+                      {cat.description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{cat.description}</p>}
                     </div>
-                    <span className="ml-2 text-xs font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                    <span className="ml-2 text-xs font-medium bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">
                       {catItems.length} items
                     </span>
                   </div>
@@ -270,7 +282,7 @@ const MenuManagement = () => {
 
                 {/* Items List */}
                 {isExpanded && (
-                  <div className="border-t border-gray-100">
+                  <div className="border-t border-gray-100 dark:border-slate-700">
                     {catItems.length === 0 ? (
                       <div className="px-6 py-8 text-center text-gray-400 text-sm">
                         No items in this category.{' '}
@@ -279,10 +291,18 @@ const MenuManagement = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="divide-y divide-gray-50">
+                      <div className="divide-y divide-gray-50 dark:divide-slate-700/50">
                         {catItems.map((item) => (
-                          <div key={item._id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 transition-colors">
+                          <div key={item._id} className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                             <div className="flex items-center gap-3 min-w-0 flex-1">
+                              {/* Image Thumbnail */}
+                              {item.images && item.images.length > 0 ? (
+                                <img src={item.images[0].url} alt={item.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0 border border-gray-100 dark:border-slate-600" />
+                              ) : (
+                                <div className="w-12 h-12 rounded-lg bg-gray-50 dark:bg-slate-700 flex items-center justify-center flex-shrink-0 border border-gray-100 dark:border-slate-600">
+                                  <UtensilsCrossed className="w-5 h-5 text-gray-300 dark:text-gray-500" />
+                                </div>
+                              )}
                               {/* Veg / Non-veg indicator */}
                               <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center ${
                                 item.foodType === 'veg' ? 'border-green-500' : 'border-red-500'
@@ -292,16 +312,16 @@ const MenuManagement = () => {
                                 }`} />
                               </div>
                               <div className="min-w-0">
-                                <p className={`font-medium text-sm ${item.isAvailable !== false ? 'text-gray-900' : 'text-gray-400 line-through'}`}>
+                                <p className={`font-medium text-sm ${item.isAvailable !== false ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500 line-through'}`}>
                                   {item.name}
                                 </p>
                                 {item.description && (
-                                  <p className="text-xs text-gray-500 truncate max-w-sm">{item.description}</p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-sm">{item.description}</p>
                                 )}
                               </div>
                             </div>
                             <div className="flex items-center gap-4 ml-4">
-                              <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">₹{item.price}</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">₹{item.price}</span>
                               <span className="text-xs text-gray-400 whitespace-nowrap">{item.preparationTime} min</span>
                               {/* Toggle */}
                               <button
@@ -432,6 +452,15 @@ const MenuManagement = () => {
                 placeholder="15"
               />
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Item Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-colors"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
